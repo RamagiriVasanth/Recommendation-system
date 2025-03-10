@@ -1,0 +1,7 @@
+user_id,product_id,category,price
+1,101,Electronics,199.99
+1,102,Clothing,49.99
+2,101,Electronics,199.99
+2,103,Home,59.99
+3,102,Clothing,49.99
+3,104,Toys,29.99
