@@ -1,14 +1,9 @@
 from flask import Flask, request, jsonify
-from recommendation import recommend_products, recommend_products_using_heap
+from recommendation import recommend_products
+import os
 
 app = Flask(__name__)
 
-# Root route
-@app.route('/')
-def home():
-    return "Welcome to the E-Commerce Product Recommendation System! Visit /recommendations?user_id=<user_id> to get product recommendations."
-
-# Recommendations route
 @app.route('/recommendations', methods=['GET'])
 def get_recommendations():
     user_id = int(request.args.get('user_id'))
@@ -16,4 +11,5 @@ def get_recommendations():
     return jsonify({'user_id': user_id, 'recommended_products': recommendations})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 10000))  # Render will assign port 10000
+    app.run(debug=True, host='0.0.0.0', port=port)
