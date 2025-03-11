@@ -1,6 +1,6 @@
+import os
 from flask import Flask, request, jsonify
 from recommendation import recommend_products
-import os
 
 app = Flask(__name__)
 
@@ -17,7 +17,6 @@ def get_recommendations():
     return jsonify({'user_id': user_id, 'recommended_products': recommendations})
 
 if __name__ == '__main__':
-    # Get the port from the environment variable, or default to 5000
-    port = int(os.environ.get("PORT", 5000))
-    # Run the Flask app on all network interfaces (0.0.0.0)
-    app.run(host="0.0.0.0", port=port, debug=True)
+    # Use environment variable to get the correct port for Render or cloud provider
+    port = int(os.environ.get('PORT', 5000))  # Default to 5000 if not set
+    app.run(debug=True, host='0.0.0.0', port=port)
