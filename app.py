@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from recommendation import recommend_products
+import os
 
 app = Flask(__name__)
 
@@ -16,4 +17,7 @@ def get_recommendations():
     return jsonify({'user_id': user_id, 'recommended_products': recommendations})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Get the port from the environment variable, or default to 5000
+    port = int(os.environ.get("PORT", 5000))
+    # Run the Flask app on all network interfaces (0.0.0.0)
+    app.run(host="0.0.0.0", port=port, debug=True)
