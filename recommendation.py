@@ -31,14 +31,19 @@ for i, user_id in enumerate(user_ids):
         user_item_matrix[i][j] = user_product_map[user_id].get(product_id, 0)
 
 # Perform K-D Tree based nearest neighbor search
-neigh = NearestNeighbors(n_neighbors=5, algorithm='kd_tree')
-neigh.fit(user_item_matrix)
+neigh = NearestNeighbors(algorithm='kd_tree')
 
 # Function to recommend products based on similar users
 @lru_cache(maxsize=128)  # Cache the results for the most queried users
 def recommend_products(user_id, num_recommendations=3):
+    # Dynamically adjust n_neighbors based on the number of users available
+    n_neighbors = min(6, len(user_ids))
+    
     user_index = user_ids.index(user_id)
-    distances, indices = neigh.kneighbors([user_item_matrix[user_index]], n_neighbors=6)  # include the user itself
+    neigh.n_neighbors = n_neighbors  # Adjust neighbors dynamically
+    
+    neigh.fit(user_item_matrix)
+    distances, indices = neigh.kneighbors([user_item_matrix[user_index]], n_neighbors=n_neighbors)  # include the user itself
     
     similar_users = indices.flatten()[1:]  # exclude the user itself
     recommended_products = set()
@@ -54,10 +59,16 @@ def recommend_products(user_id, num_recommendations=3):
 
 # Function to recommend products using priority queue (heap)
 def recommend_products_using_heap(user_id, num_recommendations=3):
-    user_index = user_ids.index(user_id)
-    distances, indices = neigh.kneighbors([user_item_matrix[user_index]], n_neighbors=6)
+    # Dynamically adjust n_neighbors based on the number of users available
+    n_neighbors = min(6, len(user_ids))
     
-    similar_users = indices.flatten()[1:]
+    user_index = user_ids.index(user_id)
+    neigh.n_neighbors = n_neighbors  # Adjust neighbors dynamically
+    
+    neigh.fit(user_item_matrix)
+    distances, indices = neigh.kneighbors([user_item_matrix[user_index]], n_neighbors=n_neighbors)
+    
+    similar_users = indices.flatten()[1:]  # exclude the user itself
     recommended_products = []
 
     for similar_user in similar_users:
