@@ -1,6 +1,5 @@
-import os
 from flask import Flask, request, jsonify
-from recommendation import recommend_products
+from recommendation import recommend_products, recommend_products_using_heap
 
 app = Flask(__name__)
 
@@ -17,6 +16,4 @@ def get_recommendations():
     return jsonify({'user_id': user_id, 'recommended_products': recommendations})
 
 if __name__ == '__main__':
-    # Use environment variable to get the correct port for Render or cloud provider
-    port = int(os.environ.get('PORT', 5000))  # Default to 5000 if not set
-    app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(debug=True)
